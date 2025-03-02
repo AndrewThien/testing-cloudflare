@@ -1,16 +1,17 @@
-// app/api/ai/route.ts
 import { NextResponse } from "next/server";
 import { getRequestContext } from '@cloudflare/next-on-pages'
 import OpenAI from "openai";
 
 export const runtime = 'edge'
 
-// Specify Edge runtime
-
-
 export async function POST() {
   try {
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error("OpenAI API key is not available.");
+    }
+
+    const openai = new OpenAI({ apiKey });
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -21,9 +22,9 @@ export async function POST() {
           },
       ],
       store: true,
-  });
+    });
   
-  console.log(completion.choices[0].message);
+    console.log(completion.choices[0].message);
     // Use native fetch API instead of OpenAI SDK (which might not be Edge-compatible)
     // const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
     //   method: "POST",
@@ -44,10 +45,6 @@ export async function POST() {
     //   }),
     // });
 
-
-    
-
-    
     // if (!response.ok) {
     //   throw new Error(`OpenRouter API responded with status: ${response.status}`);
     // }
