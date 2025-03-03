@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-
+export const runtime = "edge";
 const Page = () => {
   const [response, setResponse] = useState<string | null>(null);
 
