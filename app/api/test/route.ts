@@ -1,5 +1,7 @@
 // import { getRequestContext } from '@cloudflare/next-on-pages'
 
+import OpenAI from "openai";
+
 export const runtime = 'edge'
 
 export async function POST(req: Request) {
@@ -7,17 +9,23 @@ export async function POST(req: Request) {
 
   const responseText = 'Hello World'
 
-  // In the edge runtime you can use Bindings that are available in your application
-  // (for more details see:
-  //    - https://developers.cloudflare.com/pages/framework-guides/deploy-a-nextjs-site/#use-bindings-in-your-nextjs-application
-  //    - https://developers.cloudflare.com/pages/functions/bindings/
-  // )
-  //
-  // KV Example:
-  // const myKv = getRequestContext().env.MY_KV_NAMESPACE
-  // await myKv.put('suffix', ' from a KV store!')
-  // const suffix = await myKv.get('suffix')
-  // return new Response(responseText + suffix)
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      throw new Error("OpenAI API key is not available.");
+    }
 
-  return new Response(`${responseText} and your message is: ${message}`)
+    const openai = new OpenAI({ apiKey });
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          {
+              role: "user",
+              content: `tell me something about ${message} and ${responseText} in programming, in 20 words or less`,
+          },
+      ],
+      store: false,
+    });
+
+  return new Response(`${completion.choices[0].message.content}`)
 }

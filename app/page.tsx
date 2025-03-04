@@ -11,7 +11,7 @@ const Page = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ message: "value" }),
+        body: JSON.stringify({ message: "variables" }),
       });
       const data = await res.text();
       console.log("🚀 ~ handleClick ~ data:", res);
