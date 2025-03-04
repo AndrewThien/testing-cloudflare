@@ -7,11 +7,11 @@ const Page = () => {
   const handleClick = async () => {
     try {
       const res = await fetch("api/test", {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        // body: JSON.stringify({ message: "value" }),
+        body: JSON.stringify({ message: "value" }),
       });
       const data = await res.text();
       console.log("🚀 ~ handleClick ~ data:", res);

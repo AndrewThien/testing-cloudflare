@@ -2,7 +2,9 @@
 
 export const runtime = 'edge'
 
-export async function GET() {
+export async function POST(req: Request) {
+    const { message } = await req.json() as { message: string }
+
   const responseText = 'Hello World'
 
   // In the edge runtime you can use Bindings that are available in your application
@@ -17,5 +19,5 @@ export async function GET() {
   // const suffix = await myKv.get('suffix')
   // return new Response(responseText + suffix)
 
-  return new Response(responseText)
+  return new Response(`${responseText} and your message is: ${message}`)
 }
