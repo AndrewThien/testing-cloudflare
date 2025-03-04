@@ -6,15 +6,16 @@ const Page = () => {
 
   const handleClick = async () => {
     try {
-      const res = await fetch("api/hello", {
-        method: "POST",
+      const res = await fetch("api/test", {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
         },
         // body: JSON.stringify({ message: "value" }),
       });
-      const data: { content: string } = await res.json();
-      setResponse(JSON.stringify(data.content));
+      const data = await res.text();
+      console.log("🚀 ~ handleClick ~ data:", res);
+      setResponse(JSON.stringify(data));
     } catch (error) {
       if (error instanceof Error) {
         setResponse("Error: " + error.message);
